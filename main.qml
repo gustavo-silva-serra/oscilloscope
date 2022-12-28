@@ -4,50 +4,70 @@ import QtQml 2.0
 import QtCharts 2.0
 import UiDataPlotter 1.0
 import QtQuick.Controls 2.1
+import QtQuick.Layouts 1.3
+import QtQuick.Controls.Material 2.13
 
-Window {
+
+ApplicationWindow {
     id: mainwindow
     width: 640
     height: 480
     visible: true
     title: qsTr("Voltage Plotter")
 
-    UiDataPlotter {
-        id: uidataplotter;
-    }
+    Material.theme: Material.Dark
 
-    ChartView {
-        id: chartview
+    ColumnLayout {
+        anchors.fill: parent
 
-        x: -hbar.position * width
-        width: parent.width * 10
-        height: parent.height
+        // The resizing is too slow when the chart view is added
+        // this needs a solution
+        ChartView {
+            id: chartview
+            x: -hbar.position * width
+            width: mainwindow.width * 10
+            height: mainwindow.height / 2
+            Layout.fillHeight: true
 
-        legend.visible: false
-        antialiasing: true
-        theme: ChartView.ChartThemeDark
+            legend.visible: false
+            antialiasing: true
+            theme: ChartView.ChartThemeDark
 
-        LineSeries {
-            objectName: "lineSeries"
-            axisX: ValueAxis {
-                tickCount: 1
-                labelFormat: "%.0f"
-            }
+            LineSeries {
+                objectName: "lineSeries"
+                axisX: ValueAxis {
+                    tickCount: 1
+                    labelFormat: "%.0f"
+                }
 
-            Component.onCompleted: {
-                uidataplotter.setGraphData(this)
+                UiDataPlotter {
+                    id: uidataplotter;
+                }
+
+                Component.onCompleted: {
+                    uidataplotter.setGraphData(this)
+                }
             }
         }
-    }
 
-    ScrollBar {
-        id: hbar
-        hoverEnabled: true
-        active: hovered || pressed
-        orientation: Qt.Horizontal
-        size: mainwindow.width / chartview.width
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        ScrollBar {
+            id: hbar
+            hoverEnabled: true
+            active: hovered || pressed
+            orientation: Qt.Horizontal
+            size: mainwindow.width / chartview.width
+            Layout.maximumWidth: mainwindow.width
+            Layout.fillWidth: true
+        }
+
+        Flow {
+            CheckBox {
+                checked: true
+                text: "Dark theme"
+                onCheckStateChanged: {
+                    chartview.theme = checked ? ChartView.ChartThemeDark : ChartView.ChartThemeLight
+                }
+            }
+        }
     }
 }
