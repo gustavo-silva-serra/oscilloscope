@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQml 2.0
 import QtCharts 2.0
-import PlotterDataReader 1.0
+import UiDataPlotter 1.0
 import QtQuick.Controls 2.1
 
 Window {
@@ -12,8 +12,8 @@ Window {
     visible: true
     title: qsTr("Voltage Plotter")
 
-    PlotterDataReader {
-        id: dataReader;
+    UiDataPlotter {
+        id: uidataplotter;
     }
 
     ChartView {
@@ -27,10 +27,6 @@ Window {
         antialiasing: true
         theme: ChartView.ChartThemeDark
 
-        PlotterDataReader {
-            id: plotterDataReader
-        }
-
         LineSeries {
             objectName: "lineSeries"
             axisX: ValueAxis {
@@ -39,8 +35,7 @@ Window {
             }
 
             Component.onCompleted: {
-                plotterDataReader.read(this)
-                console.log(chartview.width, chartview.height)
+                uidataplotter.setGraphData(this)
             }
         }
     }

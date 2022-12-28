@@ -1,4 +1,4 @@
-#include "plotterdatareader.h"
+#include "UiDataPlotter.h"
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    qmlRegisterType<PlotterDataReader, 1>("PlotterDataReader", 1, 0, "PlotterDataReader");
+    qmlRegisterType<UiDataPlotter, 1>("UiDataPlotter", 1, 0, "UiDataPlotter");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

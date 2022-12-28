@@ -5,8 +5,8 @@ QT += quick widgets charts
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        src/main.cpp \
-        src/PlotterDataReader.cpp
+        src/FileDataReader.cpp \
+        src/main.cpp
 
 RESOURCES += qml.qrc
 
@@ -27,4 +27,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    src/PlotterDataReader.h
+    src/FileDataReader.h \
+    src/IPlotterDataReader.h \
+    src/UiDataPlotter.h
