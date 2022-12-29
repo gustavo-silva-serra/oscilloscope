@@ -5,7 +5,9 @@ import QtCharts 2.0
 import UiDataPlotter 1.0
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
-import QtQuick.Controls.Material 2.13
+// Material auto-hides the scrollbar, it confuses the user
+// it is necessary to fix this
+// import QtQuick.Controls.Material 2.13
 
 
 ApplicationWindow {
@@ -15,8 +17,6 @@ ApplicationWindow {
     visible: true
     title: qsTr("Voltage Plotter")
 
-    Material.theme: Material.Dark
-
     ColumnLayout {
         anchors.fill: parent
 
@@ -24,20 +24,25 @@ ApplicationWindow {
         // this needs a solution
         ChartView {
             id: chartview
-            x: -hbar.position * width
-            width: mainwindow.width * 10
-            height: mainwindow.height / 2
             Layout.fillHeight: true
+            Layout.fillWidth: true
 
             legend.visible: false
             antialiasing: true
             theme: ChartView.ChartThemeDark
 
             LineSeries {
+                id: lineseries
                 objectName: "lineSeries"
+                property double startingPoint: 0
+                property double horizontalZoomFactor: (100 - zoomSlider.value) / 100
+                property double totalPoints: 0
+
                 axisX: ValueAxis {
                     tickCount: 1
-                    labelFormat: "%.0f"
+                    labelFormat: "%.1f(s)"
+                    max: (lineseries.totalPoints * hbar.position) + (lineseries.totalPoints * lineseries.horizontalZoomFactor)
+                    min: lineseries.totalPoints * hbar.position
                 }
 
                 UiDataPlotter {
@@ -45,17 +50,16 @@ ApplicationWindow {
                 }
 
                 Component.onCompleted: {
-                    uidataplotter.setGraphData(this)
+                    lineseries.totalPoints = uidataplotter.setGraphData(this)
                 }
             }
         }
 
         ScrollBar {
             id: hbar
-            hoverEnabled: true
-            active: hovered || pressed
+            active: true
             orientation: Qt.Horizontal
-            size: mainwindow.width / chartview.width
+            size: lineseries.horizontalZoomFactor
             Layout.maximumWidth: mainwindow.width
             Layout.fillWidth: true
         }
@@ -66,6 +70,35 @@ ApplicationWindow {
                 text: "Dark theme"
                 onCheckStateChanged: {
                     chartview.theme = checked ? ChartView.ChartThemeDark : ChartView.ChartThemeLight
+                }
+            }
+
+            ColumnLayout {
+                Label {
+                    text: "Zoom "
+                    Layout.alignment: Qt.AlignHCenter
+                }
+                RowLayout {
+                    id: zoomControls
+                    Slider {
+                        id: zoomSlider
+                        from: 0
+                        value: 0
+                        to: 99.9
+                    }
+                    TextInput {
+                        text: parseInt(zoomSlider.value) + "%"
+                    }
+                }
+                Button {
+                    Layout.alignment: Qt.AlignHCenter
+                    padding: 0
+                    text: "Reset"
+                    onClicked: {
+                        zoomSlider.value = 0
+                        chartview.zoomReset()
+                        zoomControls.enabled = true
+                    }
                 }
             }
         }

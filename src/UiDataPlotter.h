@@ -8,6 +8,10 @@
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QChartView>
 
+#include <iostream>
+
+using namespace std;
+
 /**
  * @brief The UiDataPlotter Handles the UI business logic
  * This class is the glue between the readers and the UI. In this way we
@@ -29,7 +33,7 @@ public:
      * @brief setGraphData Populates the graph view with data
      * @param object A QLineSeries object
      */
-    Q_INVOKABLE void setGraphData(QObject* object)
+    Q_INVOKABLE double setGraphData(QObject* object)
     {
         QLineSeries* series = dynamic_cast<QLineSeries*>(object);
         double minY = 0, maxY = 0, maxX = 0;
@@ -50,6 +54,8 @@ public:
         series->attachedAxes().at(0)->setMax(maxX);
         series->attachedAxes().at(1)->setMin(minY + -1);
         series->attachedAxes().at(1)->setMax(maxY + 1);
+
+        return maxX;
     }
 
 private:
