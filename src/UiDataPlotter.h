@@ -21,6 +21,10 @@ class UiDataPlotter : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(double MaxX READ getMaxX WRITE setMaxX NOTIFY maxXChanged)
+    Q_PROPERTY(double MaxY READ getMaxY WRITE setMaxY NOTIFY maxXChanged)
+    Q_PROPERTY(double MinY READ getMinY WRITE setMinY NOTIFY minYChanged)
+
 public:
     explicit UiDataPlotter(QObject *parent = nullptr) : QObject{parent}
     {
@@ -29,14 +33,27 @@ public:
         data_reader = new FileDataReader();
     }
 
+    ~UiDataPlotter()
+    {
+        delete data_reader;
+    }
+
+    double getMaxX() const { return maxX; }
+    void setMaxX(double max) { maxX = max; emit maxXChanged(max); }
+
+    double getMaxY() const { return maxY; }
+    void setMaxY(double max) { maxY = max; emit maxYChanged(max); }
+
+    double getMinY() const { return minY; }
+    void setMinY(double min) { minY = min; emit minYChanged(min); }
+
     /**
      * @brief setGraphData Populates the graph view with data
      * @param object A QLineSeries object
      */
-    Q_INVOKABLE double setGraphData(QObject* object)
+    Q_INVOKABLE void setGraphData(QObject* object)
     {
         QLineSeries* series = dynamic_cast<QLineSeries*>(object);
-        double minY = 0, maxY = 0, maxX = 0;
 
         // We should add asynchronous capability for the sake of responsiveness
         // and also so we can handle continuous data streams
@@ -46,20 +63,21 @@ public:
         // was painfully slow, practically impossible to use
         series->replace(data);
 
-        // Setting the UI attributes here is not optimal, but for now I am keeping the
-        // implementation as simple as possible. A better approach is to emit a signal
-        // every time these values change so the UI can react properly, using getters
-        // to update the values
-        series->attachedAxes().at(0)->setMin(0);
-        series->attachedAxes().at(0)->setMax(maxX);
-        series->attachedAxes().at(1)->setMin(minY + -1);
-        series->attachedAxes().at(1)->setMax(maxY + 1);
-
-        return maxX;
+        setMaxY(maxY); // so we emit signal
+        setMaxX(maxX);
+        setMinY(minY);
     }
 
+signals:
+    void maxXChanged(double);
+    void maxYChanged(double);
+    void minYChanged(double);
+
 private:
-    IPlotterDataReader* data_reader;
+    IPlotterDataReader* data_reader{NULL};
+    double maxX = 0;
+    double maxY = 0;
+    double minY = 0;
 };
 
 #endif // UIDATAPLOTTER_H

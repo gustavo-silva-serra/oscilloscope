@@ -17,6 +17,10 @@ ApplicationWindow {
     visible: true
     title: qsTr("Voltage Plotter")
 
+    UiDataPlotter {
+        id: uidataplotter;
+    }
+
     ColumnLayout {
         anchors.fill: parent
 
@@ -36,21 +40,24 @@ ApplicationWindow {
                 objectName: "lineSeries"
                 property double startingPoint: 0
                 property double horizontalZoomFactor: (100 - zoomSlider.value) / 100
-                property double totalPoints: 0
+                property double totalSeconds: uidataplotter.MaxX
 
                 axisX: ValueAxis {
                     tickCount: 1
                     labelFormat: "%.1f(s)"
-                    max: (lineseries.totalPoints * hbar.position) + (lineseries.totalPoints * lineseries.horizontalZoomFactor)
-                    min: lineseries.totalPoints * hbar.position
+                    max: (lineseries.totalSeconds * hbar.position) + (lineseries.totalSeconds * lineseries.horizontalZoomFactor)
+                    min: lineseries.totalSeconds * hbar.position
                 }
 
-                UiDataPlotter {
-                    id: uidataplotter;
+                axisY: ValueAxis {
+                    tickCount: 1
+                    labelFormat: "%.2f(V)"
+                    max: uidataplotter.MaxY + 1
+                    min: uidataplotter.MinY - 1
                 }
 
                 Component.onCompleted: {
-                    lineseries.totalPoints = uidataplotter.setGraphData(this)
+                    uidataplotter.setGraphData(this)
                 }
             }
 
@@ -114,6 +121,7 @@ ApplicationWindow {
         }
 
         Flow {
+            spacing: 20
             CheckBox {
                 checked: true
                 text: "Dark theme"
@@ -148,6 +156,20 @@ ApplicationWindow {
                         chartview.zoomReset()
                         zoomControls.enabled = true
                     }
+                }
+            }
+            ColumnLayout {
+                Label {
+                    text: "Max.: " + uidataplotter.MaxY + "V"
+                    Layout.alignment: Qt.AlignHCenter
+                }
+                Label {
+                    text: "Min.: " + uidataplotter.MinY + "V"
+                    Layout.alignment: Qt.AlignHCenter
+                }
+                Label {
+                    text: "Secs: " + parseInt(uidataplotter.MaxX) + "s"
+                    Layout.alignment: Qt.AlignHCenter
                 }
             }
         }

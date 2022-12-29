@@ -23,6 +23,8 @@ public:
      * need to traverse the list to find these values.
      */
     virtual QList<QPointF> read(double& minY, double& maxY, double& maxX) = 0;
+
+    virtual ~IPlotterDataReader() {}
 };
 
 #endif // IPLOTTERDATAREADER_H
