@@ -5,6 +5,8 @@ import QtCharts 2.0
 import UiDataPlotter 1.0
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs
+
 // Material auto-hides the scrollbar, it confuses the user
 // it is necessary to fix this
 // import QtQuick.Controls.Material 2.13
@@ -21,7 +23,18 @@ ApplicationWindow {
         id: uidataplotter;
     }
 
+    FileDialog {
+        id: fileDialog
+        title: "Please choose a file"
+        onAccepted: {
+            uidataplotter.setGraphData(lineseries, fileDialog.selectedFile)
+        }
+        onRejected: {
+        }
+    }
+
     ColumnLayout {
+        id: maincolumn
         anchors.fill: parent
 
         // The resizing is too slow when the chart view is added
@@ -56,9 +69,7 @@ ApplicationWindow {
                     min: uidataplotter.MinY - 1
                 }
 
-                Component.onCompleted: {
-                    uidataplotter.setGraphData(this)
-                }
+                Component.onCompleted: console.log(this);
             }
 
             // Rubber band, copied from
@@ -122,11 +133,20 @@ ApplicationWindow {
 
         Flow {
             spacing: 20
-            CheckBox {
-                checked: true
-                text: "Dark theme"
-                onCheckStateChanged: {
-                    chartview.theme = checked ? ChartView.ChartThemeDark : ChartView.ChartThemeLight
+            ColumnLayout {
+                Button {
+                    text: "Load file"
+                    onClicked: {
+                        fileDialog.visible = true
+                    }
+                }
+
+                CheckBox {
+                    checked: true
+                    text: "Dark theme"
+                    onCheckStateChanged: {
+                        chartview.theme = checked ? ChartView.ChartThemeDark : ChartView.ChartThemeLight
+                    }
                 }
             }
 

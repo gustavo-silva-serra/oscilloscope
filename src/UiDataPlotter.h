@@ -30,12 +30,12 @@ public:
     {
         // This will eventually transform into a factory
         // or dependecy injection for more flexibility
-        data_reader = new FileDataReader();
+        dataReader = new FileDataReader();
     }
 
     ~UiDataPlotter()
     {
-        delete data_reader;
+        delete dataReader;
     }
 
     double getMaxX() const { return maxX; }
@@ -51,13 +51,15 @@ public:
      * @brief setGraphData Populates the graph view with data
      * @param object A QLineSeries object
      */
-    Q_INVOKABLE void setGraphData(QObject* object)
+    Q_INVOKABLE void setGraphData(QObject* object, QString fileName)
     {
         QLineSeries* series = dynamic_cast<QLineSeries*>(object);
 
+        fileName.remove("file:///");
+
         // We should add asynchronous capability for the sake of responsiveness
         // and also so we can handle continuous data streams
-        QList<QPointF> data = data_reader->read(minY, maxY, maxX);
+        QList<QPointF> data = dataReader->read(fileName.toStdString(), minY, maxY, maxX);
 
         // I had to set the UI data in this manner because getting the data in the QML
         // was painfully slow, practically impossible to use
@@ -74,7 +76,7 @@ signals:
     void minYChanged(double);
 
 private:
-    IPlotterDataReader* data_reader{NULL};
+    IPlotterDataReader* dataReader{NULL};
     double maxX = 0;
     double maxY = 0;
     double minY = 0;

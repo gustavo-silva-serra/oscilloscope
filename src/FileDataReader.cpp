@@ -8,7 +8,7 @@
 
 using namespace std;
 
-QList<QPointF> FileDataReader::read(double& minY, double& maxY, double& maxX)
+QList<QPointF> FileDataReader::read(std::string fileName, double& minY, double& maxY, double& maxX)
 {
     QList<QPointF> data;
     std::string str;
@@ -17,7 +17,7 @@ QList<QPointF> FileDataReader::read(double& minY, double& maxY, double& maxX)
     minY = std::numeric_limits<double>::infinity();
     maxY = std::numeric_limits<double>::lowest();
 
-    std::ifstream in("signal.txt");
+    std::ifstream in(fileName);
     if (!in)
     {
         throw new std::runtime_error("File not found");

@@ -22,7 +22,7 @@ public:
      * The output parameters are a convenience for the caller, so it doesn't
      * need to traverse the list to find these values.
      */
-    virtual QList<QPointF> read(double& minY, double& maxY, double& maxX) = 0;
+    virtual QList<QPointF> read(std::string fileName, double& minY, double& maxY, double& maxX) = 0;
 
     virtual ~IPlotterDataReader() {}
 };
