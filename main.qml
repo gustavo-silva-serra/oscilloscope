@@ -9,7 +9,7 @@ import QtQuick.Dialogs
 
 // Material auto-hides the scrollbar, it confuses the user
 // it is necessary to fix this
-// import QtQuick.Controls.Material 2.13
+import QtQuick.Controls.Material 2.13
 
 
 ApplicationWindow {
@@ -27,10 +27,24 @@ ApplicationWindow {
         id: fileDialog
         title: "Please choose a file"
         onAccepted: {
-            uidataplotter.setGraphData(lineseries, fileDialog.selectedFile)
+            uidataplotter.setGraphData(lineseries, fileDialog.selectedFile, frequencyInput.text)
         }
-        onRejected: {
+    }
+
+    Dialog {
+        id: frequencyDialog
+        title: "Inform the frequency (KHz)"
+        TextInput {
+            id: frequencyInput
+            maximumLength: 4
+            inputMask: '0000'
+            focus: true
+            text: '333'
         }
+
+        standardButtons: Dialog.Ok | Dialog.Cancel
+
+        onAccepted: fileDialog.visible = true
     }
 
     ColumnLayout {
@@ -140,7 +154,7 @@ ApplicationWindow {
                     Button {
                         text: "Load new file"
                         onClicked: {
-                            fileDialog.visible = true
+                            frequencyDialog.visible = true
                         }
                     }
 

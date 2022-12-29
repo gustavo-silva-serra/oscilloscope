@@ -8,7 +8,7 @@
 
 using namespace std;
 
-QList<QPointF> FileDataReader::read(std::string fileName, double& minY, double& maxY, double& maxX)
+QList<QPointF> FileDataReader::read(std::string fileName, int frequency, double& minY, double& maxY, double& maxX)
 {
     QList<QPointF> data;
     std::string str;

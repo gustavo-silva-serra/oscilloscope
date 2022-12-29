@@ -8,10 +8,8 @@
 
 class FileDataReader : public IPlotterDataReader
 {
-    const double frequency = 333;
-
 public:
-    QList<QPointF> read(std::string fileName, double& minY, double& maxY, double& maxX);
+    QList<QPointF> read(std::string fileName, int frequency, double& minY, double& maxY, double& maxX);
 };
 
 #endif // FILEDATAREADER_H
