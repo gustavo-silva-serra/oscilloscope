@@ -17,7 +17,7 @@ ApplicationWindow {
     width: 640
     height: 480
     visible: true
-    title: qsTr("Voltage Plotter")
+    title: qsTr("Oscilloscope")
 
     UiDataPlotter {
         id: uidataplotter;
@@ -133,63 +133,70 @@ ApplicationWindow {
 
         Flow {
             spacing: 20
-            ColumnLayout {
-                Button {
-                    text: "Load file"
-                    onClicked: {
-                        fileDialog.visible = true
+            padding: 10
+            GroupBox {
+                title: "Options"
+                ColumnLayout {
+                    Button {
+                        text: "Load new file"
+                        onClicked: {
+                            fileDialog.visible = true
+                        }
                     }
-                }
 
-                CheckBox {
-                    checked: true
-                    text: "Dark theme"
-                    onCheckStateChanged: {
-                        chartview.theme = checked ? ChartView.ChartThemeDark : ChartView.ChartThemeLight
+                    CheckBox {
+                        checked: true
+                        text: "Dark theme"
+                        onCheckStateChanged: {
+                            chartview.theme = checked ? ChartView.ChartThemeDark : ChartView.ChartThemeLight
+                        }
                     }
                 }
             }
 
-            ColumnLayout {
-                Label {
-                    text: "Zoom "
-                    Layout.alignment: Qt.AlignHCenter
-                }
-                RowLayout {
-                    id: zoomControls
-                    Slider {
-                        id: zoomSlider
-                        from: 0
-                        value: 0
-                        to: 99.9
+            GroupBox {
+                title: "Zoom control"
+                ColumnLayout {
+                    RowLayout {
+                        id: zoomControls
+                        Slider {
+                            id: zoomSlider
+                            from: 0
+                            value: 0
+                            to: 99.9
+                        }
+                        TextInput {
+                            text: parseInt(zoomSlider.value) + "%"
+                        }
                     }
-                    TextInput {
-                        text: parseInt(zoomSlider.value) + "%"
-                    }
-                }
-                Button {
-                    Layout.alignment: Qt.AlignHCenter
-                    padding: 0
-                    text: "Reset"
-                    onClicked: {
-                        zoomSlider.value = 0
-                        chartview.zoomReset()
-                        zoomControls.enabled = true
+                    Button {
+                        Layout.alignment: Qt.AlignHCenter
+                        padding: 0
+                        text: "Reset"
+                        onClicked: {
+                            zoomSlider.value = 0
+                            chartview.zoomReset()
+                            zoomControls.enabled = true
+                        }
                     }
                 }
             }
-            ColumnLayout {
-                Label {
-                    text: "Max.: " + uidataplotter.MaxY + "V"
-                    Layout.alignment: Qt.AlignHCenter
-                }
-                Label {
-                    text: "Min.: " + uidataplotter.MinY + "V"
-                    Layout.alignment: Qt.AlignHCenter
-                }
-                Label {
-                    text: "Secs: " + parseInt(uidataplotter.MaxX) + "s"
-                    Layout.alignment: Qt.AlignHCenter
+
+            GroupBox {
+                title: "Data info"
+                ColumnLayout {
+                    Label {
+                        text: "Max.: " + uidataplotter.MaxY + "V"
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+                    Label {
+                        text: "Min.: " + uidataplotter.MinY + "V"
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+                    Label {
+                        text: "Secs: " + parseInt(uidataplotter.MaxX) + "s"
+                        Layout.alignment: Qt.AlignHCenter
+                    }
                 }
             }
         }
