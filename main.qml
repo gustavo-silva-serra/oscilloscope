@@ -70,20 +70,16 @@ ApplicationWindow {
                 property double totalSeconds: uidataplotter.MaxX
 
                 axisX: ValueAxis {
-                    tickCount: 1
                     labelFormat: "%.1f(s)"
                     max: (lineseries.totalSeconds * hbar.position) + (lineseries.totalSeconds * lineseries.horizontalZoomFactor)
                     min: lineseries.totalSeconds * hbar.position
                 }
 
                 axisY: ValueAxis {
-                    tickCount: 1
                     labelFormat: "%.2f(V)"
                     max: uidataplotter.MaxY + 1
                     min: uidataplotter.MinY - 1
                 }
-
-                Component.onCompleted: console.log(this);
             }
 
             // Rubber band, copied from
@@ -143,6 +139,7 @@ ApplicationWindow {
             size: lineseries.horizontalZoomFactor
             Layout.maximumWidth: mainwindow.width
             Layout.fillWidth: true
+            policy: "AlwaysOn"
         }
 
         Flow {
