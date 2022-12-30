@@ -6,9 +6,6 @@ import UiDataPlotter 1.0
 import QtQuick.Controls 2.1
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs
-
-// Material auto-hides the scrollbar, it confuses the user
-// it is necessary to fix this
 import QtQuick.Controls.Material 2.13
 
 
@@ -65,14 +62,12 @@ ApplicationWindow {
             LineSeries {
                 id: lineseries
                 objectName: "lineSeries"
-                property double startingPoint: 0
                 property double horizontalZoomFactor: (100 - zoomSlider.value) / 100
-                property double totalSeconds: uidataplotter.MaxX
 
                 axisX: ValueAxis {
                     labelFormat: "%.1f(s)"
-                    max: (lineseries.totalSeconds * hbar.position) + (lineseries.totalSeconds * lineseries.horizontalZoomFactor)
-                    min: lineseries.totalSeconds * hbar.position
+                    max: (uidataplotter.MaxX * hbar.position) + (uidataplotter.MaxX * lineseries.horizontalZoomFactor)
+                    min: uidataplotter.MaxX * hbar.position
                 }
 
                 axisY: ValueAxis {
