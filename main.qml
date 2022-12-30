@@ -1,12 +1,12 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
-import QtQml 2.0
-import QtCharts 2.0
+import QtQml 2.15
+import QtCharts 2.15
 import UiDataPlotter 1.0
-import QtQuick.Controls 2.1
-import QtQuick.Layouts 1.3
-import QtQuick.Dialogs
-import QtQuick.Controls.Material 2.13
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Dialogs 1.3
+import QtQuick.Controls.Material 2.15
 
 
 ApplicationWindow {
@@ -24,7 +24,7 @@ ApplicationWindow {
         id: fileDialog
         title: "Please choose a file"
         onAccepted: {
-            uidataplotter.setGraphData(lineseries, fileDialog.selectedFile, frequencyInput.text)
+            uidataplotter.setGraphData(lineseries, fileDialog.fileUrl, frequencyInput.text)
         }
     }
 

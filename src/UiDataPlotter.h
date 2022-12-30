@@ -55,7 +55,7 @@ public:
      */
     Q_INVOKABLE void setGraphData(QObject* object, QString fileName, int frequency)
     {
-        QLineSeries* series = dynamic_cast<QLineSeries*>(object);
+        QtCharts::QLineSeries* series = dynamic_cast<QtCharts::QLineSeries*>(object);
 
         fileName.remove("file:///");
 
